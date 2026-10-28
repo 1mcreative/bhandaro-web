@@ -33,7 +33,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const start = useCallback(async (t: components["schemas"]["Tokens"]) => {
     setSession({ access: t.accessToken, refresh: t.refreshToken });
-    setMe(await call(api.GET("/me")));
+    try {
+      setMe(await call(api.GET("/me")));
+    } catch (e) {
+      setSession(null); // never keep tokens for a user we could not load
+      throw e;
+    }
   }, []);
 
   const value: Auth = {
@@ -44,8 +49,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       start(await call(api.POST("/auth/register", { body: { tenantName, email, password, locale } }))),
     logout: async () => {
       const refreshToken = currentRefreshToken();
-      if (refreshToken) await api.POST("/auth/logout", { body: { refreshToken } }).catch(() => undefined); // revoke server-side, best effort
-      setSession(null); // listener clears the user and the cache
+      setSession(null); // listener clears the user and the cache right away
+      if (refreshToken) void api.POST("/auth/logout", { body: { refreshToken } }).catch(() => undefined); // revoke server-side, best effort
     },
   };
   return <Ctx.Provider value={value}>{children}</Ctx.Provider>;

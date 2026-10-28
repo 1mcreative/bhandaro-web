@@ -69,7 +69,7 @@ test("a sale sends a negative delta; a retry after a network error reuses the sa
   expect(posts[0].key).toBeTruthy();
 });
 
-test("after success the next change gets a fresh key; editing the form also gets a fresh key", async () => {
+test("a new change after a success is sent with a fresh key", async () => {
   moveResponses = [() => json(MOVED), () => json(MOVED)];
   const user = userEvent.setup();
   await renderStock();
@@ -105,4 +105,35 @@ test("an expired access token is refreshed once and the same request (same key) 
   await user.click(screen.getByRole("button", { name: "Apply" }));
   expect(await screen.findByRole("status")).toBeInTheDocument();
   expect(posts[0].key).toBe(posts[1].key);
+});
+
+test("a correction keeps its sign: +3 and -3 are sent as typed", async () => {
+  moveResponses = [() => json({ ...MOVED, delta: 3 }), () => json({ ...MOVED, delta: -3 })];
+  const user = userEvent.setup();
+  await renderStock();
+  await fill(user, "ADJUST", "3");
+  await user.click(screen.getByRole("button", { name: "Apply" }));
+  await screen.findByRole("status");
+  await user.type(screen.getByLabelText(/Quantity/), "-3");
+  await user.click(screen.getByRole("button", { name: "Apply" }));
+  await waitFor(() => expect(posts).toHaveLength(2));
+  expect(posts.map((p) => p.body.delta)).toEqual([3, -3]);
+});
+
+test("a negative quantity is refused for received/sold/wasted instead of silently flipping sign", async () => {
+  moveResponses = [];
+  const user = userEvent.setup();
+  await renderStock();
+  await fill(user, "RECEIVE", "-5");
+  expect(screen.getByRole("button", { name: "Apply" })).toBeDisabled();
+  expect(screen.getByText(/Enter a valid quantity/)).toBeInTheDocument();
+  expect(posts).toHaveLength(0);
+});
+
+test("exponent and over-precise numbers are not sent", async () => {
+  moveResponses = [];
+  const user = userEvent.setup();
+  await renderStock();
+  await fill(user, "SALE", "1.2345");
+  expect(screen.getByRole("button", { name: "Apply" })).toBeDisabled();
 });

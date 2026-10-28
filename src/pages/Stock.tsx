@@ -8,6 +8,7 @@ import { ErrorNote, Field, useNumber } from "../components/ui";
 
 type Reason = components["schemas"]["Reason"];
 const REASONS: Reason[] = ["RECEIVE", "SALE", "WASTE", "ADJUST"];
+const QTY = /^-?\d+(\.\d{1,3})?$/; // matches the API: up to 3 decimals, no exponent forms
 
 export default function Stock() {
   const { t, i18n } = useTranslation();
@@ -31,14 +32,16 @@ export default function Stock() {
   const history = useQuery({ queryKey: ["movements"], queryFn: () => call(api.GET("/stock/movements", { params: { query: { limit: 50 } } })) });
 
   const move = useMutation({
-    mutationFn: () => {
-      const q = Number(qty);
-      const delta = reason === "RECEIVE" ? Math.abs(q) : reason === "ADJUST" ? q : -Math.abs(q);
-      return call(api.POST("/stock/movements", { params: { header: { "Idempotency-Key": key.current } }, body: { itemId, locationId, delta, reason } }));
+    mutationFn: (sentKey: string) => {
+      const q = Number(qty); // already validated: non-zero, positive unless ADJUST
+      const delta = reason === "RECEIVE" || reason === "ADJUST" ? q : -q;
+      return call(api.POST("/stock/movements", { params: { header: { "Idempotency-Key": sentKey } }, body: { itemId, locationId, delta, reason } }));
     },
-    onSuccess: (m) => {
-      key.current = crypto.randomUUID();
-      setQty("");
+    onSuccess: (m, sentKey) => {
+      if (key.current === sentKey) { // untouched since submit: this change is finished, the next one is a new intent
+        key.current = crypto.randomUUID();
+        setQty("");
+      }
       setDone(m.qtyAfter);
       qc.invalidateQueries({ queryKey: ["levels"] });
       qc.invalidateQueries({ queryKey: ["movements"] });
@@ -48,12 +51,13 @@ export default function Stock() {
   const itemById = new Map(items.data?.map((i) => [i.id, i]));
   const locName = new Map(locations.data?.map((l) => [l.id, l.name]));
   const write = can("inventory.write");
+  const valid = QTY.test(qty) && Number(qty) !== 0 && (reason === "ADJUST" || Number(qty) > 0);
 
   return (
     <>
       <h1>{t("stock.title")}</h1>
       {write && (
-        <form className="card grid" onSubmit={(e: FormEvent) => { e.preventDefault(); move.mutate(); }}>
+        <form className="card grid" onSubmit={(e: FormEvent) => { e.preventDefault(); if (valid) move.mutate(key.current); }}>
           <h2>{t("stock.move")}</h2>
           <Field label={t("stock.item")}>
             <select value={itemId} onChange={(e) => edit(setItemId)(e.target.value)} required>
@@ -73,16 +77,17 @@ export default function Stock() {
             </select>
           </Field>
           <Field label={t("stock.quantity")} hint={reason === "ADJUST" ? t("stock.quantityAdjustHint") : undefined}>
-            <input type="number" step="0.001" inputMode="decimal" value={qty} onChange={(e) => edit(setQty)(e.target.value)} required />
+            <input type="number" step="0.001" min={reason === "ADJUST" ? undefined : "0"} inputMode="decimal" value={qty} onChange={(e) => edit(setQty)(e.target.value)} required />
           </Field>
+          {qty !== "" && !valid && <p className="note error">{t("stock.invalidQty")}</p>}
           <ErrorNote error={move.error} />
-          {done !== null && <p role="status" className="note ok">{t("stock.success", { qty: num(done) })}</p>}
-          <button type="submit" disabled={move.isPending || qty === "" || Number(qty) === 0}>{t("stock.submit")}</button>
+          <p role="status" className={done !== null ? "note ok" : "sr"}>{done !== null ? t("stock.success", { qty: num(done) }) : ""}</p>
+          <button type="submit" disabled={move.isPending || !valid}>{t("stock.submit")}</button>
         </form>
       )}
 
       <h2>{t("stock.levels")}</h2>
-      <ErrorNote error={levels.error ?? items.error} />
+      <ErrorNote error={levels.error ?? items.error ?? locations.error ?? history.error} />
       {levels.isPending ? <p>{t("common.loading")}</p> : levels.data?.length === 0 ? <p className="muted">{t("common.empty")}</p> : (
         <div className="scroll"><table>
           <thead><tr><th>{t("stock.item")}</th><th>{t("stock.location")}</th><th className="num">{t("stock.qty")}</th></tr></thead>

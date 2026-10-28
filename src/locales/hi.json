@@ -1,33 +1,110 @@
 {
-  "app": { "name": "भंडारो", "tagline": "किसी भी दुकान, घर या रसोई के लिए सरल इन्वेंटरी" },
-  "nav": { "items": "सामान", "locations": "स्थान", "stock": "स्टॉक", "users": "उपयोगकर्ता" },
+  "meta": {
+    "name": "हिन्दी"
+  },
+  "app": {
+    "name": "भंडारो",
+    "tagline": "किसी भी दुकान, घर या रसोई के लिए सरल इन्वेंटरी"
+  },
+  "nav": {
+    "items": "सामान",
+    "locations": "स्थान",
+    "stock": "स्टॉक",
+    "users": "उपयोगकर्ता"
+  },
   "common": {
-    "save": "सहेजें", "cancel": "रद्द करें", "edit": "बदलें", "delete": "हटाएँ", "add": "जोड़ें", "loading": "लोड हो रहा है…",
-    "empty": "अभी यहाँ कुछ नहीं है।", "confirmDelete": "“{{name}}” हटाएँ?", "language": "भाषा", "logout": "लॉग आउट",
-    "actions": "कार्य", "name": "नाम", "yes": "हाँ", "no": "नहीं", "saved": "सहेजा गया।"
+    "save": "सहेजें",
+    "cancel": "रद्द करें",
+    "edit": "बदलें",
+    "delete": "हटाएँ",
+    "add": "जोड़ें",
+    "loading": "लोड हो रहा है…",
+    "empty": "अभी यहाँ कुछ नहीं है।",
+    "confirmDelete": "“{{name}}” हटाएँ?",
+    "language": "भाषा",
+    "logout": "लॉग आउट",
+    "actions": "कार्य",
+    "name": "नाम",
+    "yes": "हाँ",
+    "no": "नहीं",
+    "saved": "सहेजा गया।",
+    "mainNav": "मुख्य"
   },
   "auth": {
-    "loginTitle": "लॉग इन करें", "registerTitle": "अपना खाता बनाएँ", "email": "ईमेल", "password": "पासवर्ड",
-    "passwordHint": "कम से कम 10 अक्षर", "businessName": "व्यवसाय का नाम", "signIn": "लॉग इन",
-    "createAccount": "खाता बनाएँ", "haveAccount": "पहले से खाता है? लॉग इन करें",
-    "noAccount": "नए हैं? खाता बनाएँ", "sessionNote": "आपकी सुरक्षा के लिए, पेज रीलोड करने पर आपको दोबारा लॉग इन करना होगा।"
+    "loginTitle": "लॉग इन करें",
+    "registerTitle": "अपना खाता बनाएँ",
+    "email": "ईमेल",
+    "password": "पासवर्ड",
+    "passwordHint": "कम से कम 10 अक्षर",
+    "businessName": "व्यवसाय का नाम",
+    "signIn": "लॉग इन",
+    "createAccount": "खाता बनाएँ",
+    "haveAccount": "पहले से खाता है? लॉग इन करें",
+    "noAccount": "नए हैं? खाता बनाएँ",
+    "sessionNote": "आपकी सुरक्षा के लिए, पेज रीलोड करने पर आपको दोबारा लॉग इन करना होगा।"
   },
   "items": {
-    "title": "सामान", "new": "नया सामान", "edit": "सामान बदलें", "sku": "SKU", "unit": "इकाई", "barcode": "बारकोड",
-    "lowStock": "कम स्टॉक की सीमा", "lowStockHint": "स्टॉक इसके बराबर या कम होने पर चेतावनी दें"
+    "title": "सामान",
+    "new": "नया सामान",
+    "edit": "सामान बदलें",
+    "sku": "SKU",
+    "unit": "इकाई",
+    "barcode": "बारकोड",
+    "lowStock": "कम स्टॉक की सीमा",
+    "lowStockHint": "स्टॉक इसके बराबर या कम होने पर चेतावनी दें"
   },
-  "locations": { "title": "स्थान", "new": "नया स्थान", "edit": "स्थान बदलें", "timezone": "समय क्षेत्र", "timezoneHint": "जैसे Asia/Kolkata (डिफ़ॉल्ट UTC)" },
+  "locations": {
+    "title": "स्थान",
+    "new": "नया स्थान",
+    "edit": "स्थान बदलें",
+    "timezone": "समय क्षेत्र",
+    "timezoneHint": "जैसे Asia/Kolkata (डिफ़ॉल्ट UTC)"
+  },
   "stock": {
-    "title": "स्टॉक", "move": "स्टॉक बदलें", "item": "सामान", "location": "स्थान", "reason": "कारण", "quantity": "मात्रा",
-    "quantityAdjustHint": "घटाने के लिए ऋण चिह्न (−) लगाएँ", "choose": "चुनें…", "submit": "लागू करें",
-    "success": "हो गया। नई मात्रा: {{qty}}", "levels": "मौजूदा स्टॉक", "history": "हाल के बदलाव (अंतिम 50)",
-    "qty": "मात्रा", "low": "कम", "when": "कब", "change": "बदलाव", "after": "बाद में",
-    "reasons": { "RECEIVE": "स्टॉक जोड़ें (प्राप्त)", "SALE": "बिका", "WASTE": "बर्बाद / खोया", "ADJUST": "सुधार" },
-    "reasonShort": { "RECEIVE": "प्राप्त", "SALE": "बिका", "WASTE": "बर्बाद", "ADJUST": "सुधार" }
+    "title": "स्टॉक",
+    "move": "स्टॉक बदलें",
+    "item": "सामान",
+    "location": "स्थान",
+    "reason": "कारण",
+    "quantity": "मात्रा",
+    "quantityAdjustHint": "घटाने के लिए ऋण चिह्न (−) लगाएँ",
+    "choose": "चुनें…",
+    "submit": "लागू करें",
+    "success": "हो गया। नई मात्रा: {{qty}}",
+    "levels": "मौजूदा स्टॉक",
+    "history": "हाल के बदलाव (अंतिम 50)",
+    "qty": "मात्रा",
+    "low": "कम",
+    "when": "कब",
+    "change": "बदलाव",
+    "after": "बाद में",
+    "reasons": {
+      "RECEIVE": "स्टॉक जोड़ें (प्राप्त)",
+      "SALE": "बिका",
+      "WASTE": "बर्बाद / खोया",
+      "ADJUST": "सुधार"
+    },
+    "reasonShort": {
+      "RECEIVE": "प्राप्त",
+      "SALE": "बिका",
+      "WASTE": "बर्बाद",
+      "ADJUST": "सुधार"
+    },
+    "invalidQty": "सही मात्रा लिखें: दशमलव के बाद अधिकतम 3 अंक, और ऋण (−) केवल सुधार के लिए।"
   },
   "users": {
-    "title": "उपयोगकर्ता", "new": "नया उपयोगकर्ता", "email": "ईमेल", "role": "भूमिका", "active": "सक्रिय", "created": "बनाया गया",
-    "roles": { "OWNER": "मालिक", "ADMIN": "एडमिन", "WRITER": "लेखक", "READER": "पाठक" }
+    "title": "उपयोगकर्ता",
+    "new": "नया उपयोगकर्ता",
+    "email": "ईमेल",
+    "role": "भूमिका",
+    "active": "सक्रिय",
+    "created": "बनाया गया",
+    "roles": {
+      "OWNER": "मालिक",
+      "ADMIN": "एडमिन",
+      "WRITER": "लेखक",
+      "READER": "पाठक"
+    }
   },
   "errors": {
     "UNKNOWN": "कुछ गड़बड़ हो गई। कृपया दोबारा कोशिश करें।",

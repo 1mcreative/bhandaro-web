@@ -11,7 +11,7 @@ export default function Layout({ children }: { children: ReactNode }) {
     <>
       <header className="bar">
         <strong className="brand">{t("app.name")}</strong>
-        <nav aria-label="main">
+        <nav aria-label={t("common.mainNav")}>
           <NavLink to="/stock">{t("nav.stock")}</NavLink>
           <NavLink to="/items">{t("nav.items")}</NavLink>
           <NavLink to="/locations">{t("nav.locations")}</NavLink>

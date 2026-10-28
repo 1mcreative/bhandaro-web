@@ -1,33 +1,110 @@
 {
-  "app": { "name": "Bhandaro", "tagline": "Simple inventory for any store, home or kitchen" },
-  "nav": { "items": "Items", "locations": "Locations", "stock": "Stock", "users": "Users" },
+  "meta": {
+    "name": "English"
+  },
+  "app": {
+    "name": "Bhandaro",
+    "tagline": "Simple inventory for any store, home or kitchen"
+  },
+  "nav": {
+    "items": "Items",
+    "locations": "Locations",
+    "stock": "Stock",
+    "users": "Users"
+  },
   "common": {
-    "save": "Save", "cancel": "Cancel", "edit": "Edit", "delete": "Delete", "add": "Add", "loading": "Loading…",
-    "empty": "Nothing here yet.", "confirmDelete": "Delete “{{name}}”?", "language": "Language", "logout": "Log out",
-    "actions": "Actions", "name": "Name", "yes": "Yes", "no": "No", "saved": "Saved."
+    "save": "Save",
+    "cancel": "Cancel",
+    "edit": "Edit",
+    "delete": "Delete",
+    "add": "Add",
+    "loading": "Loading…",
+    "empty": "Nothing here yet.",
+    "confirmDelete": "Delete “{{name}}”?",
+    "language": "Language",
+    "logout": "Log out",
+    "actions": "Actions",
+    "name": "Name",
+    "yes": "Yes",
+    "no": "No",
+    "saved": "Saved.",
+    "mainNav": "Main"
   },
   "auth": {
-    "loginTitle": "Log in", "registerTitle": "Create your account", "email": "Email", "password": "Password",
-    "passwordHint": "At least 10 characters", "businessName": "Business name", "signIn": "Log in",
-    "createAccount": "Create account", "haveAccount": "Already have an account? Log in",
-    "noAccount": "New here? Create an account", "sessionNote": "For your safety you stay logged in only until you reload this page."
+    "loginTitle": "Log in",
+    "registerTitle": "Create your account",
+    "email": "Email",
+    "password": "Password",
+    "passwordHint": "At least 10 characters",
+    "businessName": "Business name",
+    "signIn": "Log in",
+    "createAccount": "Create account",
+    "haveAccount": "Already have an account? Log in",
+    "noAccount": "New here? Create an account",
+    "sessionNote": "For your safety you stay logged in only until you reload this page."
   },
   "items": {
-    "title": "Items", "new": "New item", "edit": "Edit item", "sku": "SKU", "unit": "Unit", "barcode": "Barcode",
-    "lowStock": "Low-stock level", "lowStockHint": "Warn when stock is at or below this"
+    "title": "Items",
+    "new": "New item",
+    "edit": "Edit item",
+    "sku": "SKU",
+    "unit": "Unit",
+    "barcode": "Barcode",
+    "lowStock": "Low-stock level",
+    "lowStockHint": "Warn when stock is at or below this"
   },
-  "locations": { "title": "Locations", "new": "New location", "edit": "Edit location", "timezone": "Time zone", "timezoneHint": "e.g. Asia/Kolkata (default UTC)" },
+  "locations": {
+    "title": "Locations",
+    "new": "New location",
+    "edit": "Edit location",
+    "timezone": "Time zone",
+    "timezoneHint": "e.g. Asia/Kolkata (default UTC)"
+  },
   "stock": {
-    "title": "Stock", "move": "Change stock", "item": "Item", "location": "Location", "reason": "Reason", "quantity": "Quantity",
-    "quantityAdjustHint": "Use a minus sign to reduce", "choose": "Choose…", "submit": "Apply",
-    "success": "Done. New quantity: {{qty}}", "levels": "Current stock", "history": "Recent changes (latest 50)",
-    "qty": "Qty", "low": "Low", "when": "When", "change": "Change", "after": "After",
-    "reasons": { "RECEIVE": "Add stock (received)", "SALE": "Sold", "WASTE": "Wasted / lost", "ADJUST": "Correction" },
-    "reasonShort": { "RECEIVE": "Received", "SALE": "Sold", "WASTE": "Wasted", "ADJUST": "Correction" }
+    "title": "Stock",
+    "move": "Change stock",
+    "item": "Item",
+    "location": "Location",
+    "reason": "Reason",
+    "quantity": "Quantity",
+    "quantityAdjustHint": "Use a minus sign to reduce",
+    "choose": "Choose…",
+    "submit": "Apply",
+    "success": "Done. New quantity: {{qty}}",
+    "levels": "Current stock",
+    "history": "Recent changes (latest 50)",
+    "qty": "Qty",
+    "low": "Low",
+    "when": "When",
+    "change": "Change",
+    "after": "After",
+    "reasons": {
+      "RECEIVE": "Add stock (received)",
+      "SALE": "Sold",
+      "WASTE": "Wasted / lost",
+      "ADJUST": "Correction"
+    },
+    "reasonShort": {
+      "RECEIVE": "Received",
+      "SALE": "Sold",
+      "WASTE": "Wasted",
+      "ADJUST": "Correction"
+    },
+    "invalidQty": "Enter a valid quantity: up to 3 decimals, and negative only for corrections."
   },
   "users": {
-    "title": "Users", "new": "New user", "email": "Email", "role": "Role", "active": "Active", "created": "Created",
-    "roles": { "OWNER": "Owner", "ADMIN": "Admin", "WRITER": "Writer", "READER": "Reader" }
+    "title": "Users",
+    "new": "New user",
+    "email": "Email",
+    "role": "Role",
+    "active": "Active",
+    "created": "Created",
+    "roles": {
+      "OWNER": "Owner",
+      "ADMIN": "Admin",
+      "WRITER": "Writer",
+      "READER": "Reader"
+    }
   },
   "errors": {
     "UNKNOWN": "Something went wrong. Please try again.",
