@@ -1,7 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useRef, useState, type FormEvent } from "react";
 import { useTranslation } from "react-i18next";
-import { api, call } from "../api";
+import { api, ApiError, call } from "../api";
 import type { components } from "../api-types";
 import { useAuth } from "../auth";
 import { ErrorNote, Field, useNumber } from "../components/ui";
@@ -21,10 +21,15 @@ export default function Stock() {
   const [qty, setQty] = useState("");
   const [done, setDone] = useState<number | null>(null);
 
-  // One key per intended change. Reused on retry (network error, double click) so the server applies it once;
-  // replaced after success or when the user edits the form (a new intent).
-  const key = useRef(crypto.randomUUID());
-  const edit = <T,>(set: (v: T) => void) => (v: T) => { key.current = crypto.randomUUID(); setDone(null); set(v); };
+  // The key belongs to a *change* (item|location|reason|quantity), not to the form. After a timeout the server may have
+  // applied it, so the same change always retries with the same key, even if the user edits and restores the fields.
+  // Dropped only when the server decided (success or a 4xx); a different change gets a new key.
+  const pending = useRef<{ fp: string; key: string } | null>(null);
+  const keyFor = (fp: string) => {
+    if (pending.current?.fp !== fp) pending.current = { fp, key: crypto.randomUUID() };
+    return pending.current.key;
+  };
+  const edit = <T,>(set: (v: T) => void) => (v: T) => { setDone(null); set(v); };
 
   const items = useQuery({ queryKey: ["items"], queryFn: () => call(api.GET("/items", { params: { query: { limit: 500 } } })) });
   const locations = useQuery({ queryKey: ["locations"], queryFn: () => call(api.GET("/locations")) });
@@ -37,11 +42,13 @@ export default function Stock() {
       const delta = reason === "RECEIVE" || reason === "ADJUST" ? q : -q;
       return call(api.POST("/stock/movements", { params: { header: { "Idempotency-Key": sentKey } }, body: { itemId, locationId, delta, reason } }));
     },
-    onSuccess: (m, sentKey) => {
-      if (key.current === sentKey) { // untouched since submit: this change is finished, the next one is a new intent
-        key.current = crypto.randomUUID();
-        setQty("");
-      }
+    onError: (e) => {
+      // the server decided (and rolled back): nothing was applied. Network errors and 5xx keep the key.
+      if (e instanceof ApiError && e.status >= 400 && e.status < 500 && e.status !== 408 && e.status !== 429) pending.current = null;
+    },
+    onSuccess: (m) => {
+      pending.current = null; // finished: the next identical change is a new change
+      setQty("");
       setDone(m.qtyAfter);
       qc.invalidateQueries({ queryKey: ["levels"] });
       qc.invalidateQueries({ queryKey: ["movements"] });
@@ -57,7 +64,7 @@ export default function Stock() {
     <>
       <h1>{t("stock.title")}</h1>
       {write && (
-        <form className="card grid" onSubmit={(e: FormEvent) => { e.preventDefault(); if (valid) move.mutate(key.current); }}>
+        <form className="card grid" onSubmit={(e: FormEvent) => { e.preventDefault(); if (valid) move.mutate(keyFor(`${itemId}|${locationId}|${reason}|${Number(qty)}`)); }}>
           <h2>{t("stock.move")}</h2>
           <Field label={t("stock.item")}>
             <select value={itemId} onChange={(e) => edit(setItemId)(e.target.value)} required>

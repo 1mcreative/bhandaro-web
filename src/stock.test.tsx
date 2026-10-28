@@ -137,3 +137,25 @@ test("exponent and over-precise numbers are not sent", async () => {
   await fill(user, "SALE", "1.2345");
   expect(screen.getByRole("button", { name: "Apply" })).toBeDisabled();
 });
+
+test("after a timeout, editing and restoring the same change still retries with the SAME key; a 4xx drops the key", async () => {
+  moveResponses = [
+    () => { throw new TypeError("network down"); },
+    () => json({ code: "STOCK_INSUFFICIENT", params: { available: 0, requested: 2 } }, 409),
+    () => json(MOVED),
+  ];
+  const user = userEvent.setup();
+  await renderStock();
+  await fill(user, "SALE", "2");
+  await user.click(screen.getByRole("button", { name: "Apply" })); // 1: timeout, may have been applied
+  await screen.findByRole("alert");
+  const qty = screen.getByLabelText(/Quantity/);
+  await user.clear(qty); await user.type(qty, "3"); // user fiddles ...
+  await user.clear(qty); await user.type(qty, "2"); // ... and restores the same change
+  await user.click(screen.getByRole("button", { name: "Apply" })); // 2: must reuse the key; server answers 409
+  await waitFor(() => expect(posts).toHaveLength(2));
+  await user.click(screen.getByRole("button", { name: "Apply" })); // 3: definite 4xx dropped the key: new attempt
+  await waitFor(() => expect(posts).toHaveLength(3));
+  expect(posts[1].key).toBe(posts[0].key);
+  expect(posts[2].key).not.toBe(posts[0].key);
+});
